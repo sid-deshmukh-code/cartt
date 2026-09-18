@@ -1,0 +1,9 @@
+kivy[base]==2.3.0
+
+# For syncing transactions/products to AWS RDS
+pymysql==1.1.1
+python-dotenv==1.0.1
+
+# Optional - only needed if you run generate_barcodes.py to print
+# scannable test barcodes for the dummy products
+python-barcode[images]==0.15.1

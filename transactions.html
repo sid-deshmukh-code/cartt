@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Transactions - Smart Cart Admin{% endblock %}
+{% block content %}
+
+<div class="card table-card p-3">
+    <h6 class="fw-bold mb-3">All Transactions</h6>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr class="text-muted" style="font-size:0.8rem;">
+                    <th>Time</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Payment</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in rows %}
+                <tr>
+                    <td>{{ tx.transaction_time }}</td>
+                    <td>
+                        {% for item in tx.items_json|fromjson %}
+                            {{ item.name }} &times;{{ item.qty }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td class="fw-bold">Rs. {{ "%.2f"|format(tx.total) }}</td>
+                    <td>{{ tx.payment_method }}</td>
+                    <td><span class="badge bg-success">{{ tx.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-muted text-center py-3">No transactions yet</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if total_pages > 1 %}
+    <nav class="mt-2">
+        <ul class="pagination pagination-sm mb-0">
+            {% for p in range(1, total_pages + 1) %}
+            <li class="page-item {% if p == page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('transactions', page=p) }}">{{ p }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+{% endblock %}

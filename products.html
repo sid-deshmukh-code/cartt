@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Products - Smart Cart Admin{% endblock %}
+{% block content %}
+
+<div class="card table-card p-3">
+    <h6 class="fw-bold mb-3">Product Inventory</h6>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr class="text-muted" style="font-size:0.8rem;">
+                    <th>Barcode</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Weight</th>
+                    <th>Last Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in rows %}
+                <tr>
+                    <td><code>{{ p.barcode }}</code></td>
+                    <td>{{ p.name }}</td>
+                    <td>Rs. {{ "%.2f"|format(p.price) }}</td>
+                    <td>
+                        {{ p.stock }}
+                        {% if p.stock <= 10 %}<span class="badge bg-danger ms-1">Low</span>{% endif %}
+                    </td>
+                    <td>
+                        {% if p.weight_grams >= 1000 %}
+                            {{ "%.2f"|format(p.weight_grams / 1000) }} kg
+                        {% else %}
+                            {{ p.weight_grams|int }} g
+                        {% endif %}
+                    </td>
+                    <td class="text-muted">{{ p.updated_at }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="text-muted text-center py-3">No products synced yet</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Smart Cart Admin{% endblock %}
+{% block content %}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card p-3">
+            <div class="stat-label">Today's Revenue</div>
+            <div class="stat-value">Rs. {{ "%.2f"|format(today.revenue) }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card p-3">
+            <div class="stat-label">Today's Transactions</div>
+            <div class="stat-value">{{ today.c }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card p-3">
+            <div class="stat-label">All-Time Revenue</div>
+            <div class="stat-value">Rs. {{ "%.2f"|format(all_time.revenue) }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card p-3">
+            <div class="stat-label">Low Stock Items</div>
+            <div class="stat-value {% if low_stock.c > 0 %}text-danger{% endif %}">{{ low_stock.c }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card table-card p-3">
+    <h6 class="fw-bold mb-3">Recent Transactions</h6>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr class="text-muted" style="font-size:0.8rem;">
+                    <th>Time</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Payment</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in recent %}
+                <tr>
+                    <td>{{ tx.transaction_time }}</td>
+                    <td>
+                        {% for item in tx.items_json|fromjson %}
+                            {{ item.name }} &times;{{ item.qty }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td class="fw-bold">Rs. {{ "%.2f"|format(tx.total) }}</td>
+                    <td>{{ tx.payment_method }}</td>
+                    <td><span class="badge bg-success">{{ tx.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-muted text-center py-3">No transactions yet</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
